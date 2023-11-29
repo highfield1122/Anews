@@ -1,15 +1,17 @@
-from django.forms import ModelForm
-from .models import PhotoPost
+from django import forms
+from .models import Category
 
-class PhotoPostForm(ModelForm):
-    '''ModelFormのサブクラス
-    '''
+class CategoryForm(forms.ModelForm):
     class Meta:
-        '''ModelFormのインナークラス
-        
-        Attributes:
-          model: モデルのクラス
-          fields: フォームで使用するモデルのフィールドを指定
-        '''
-        model = PhotoPost
-        fields = ['category', 'title', 'comment', 'image1', 'image2']
+        model = Category
+        fields = ['name']
+
+
+class ContactForm(forms.Form):
+    """お問い合わせフォーム"""
+
+    # フィールド
+    name = forms.CharField()
+    email = forms.EmailField()
+    title = forms.CharField()
+    message = forms.CharField()

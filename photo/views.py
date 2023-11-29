@@ -1,217 +1,217 @@
+from django.views.generic import FormView
+from django.urls import reverse_lazy
+from . import forms
+from django.contrib import messages
+from django.core.mail import EmailMessage
+
 from django.shortcuts import render
 # django.views.genericからTemplateView、ListViewをインポート
 from django.views.generic import TemplateView, ListView
+#
+from .models import Blog
+from .models import Category, tokomodel,Blog
+from django.shortcuts import get_object_or_404
 # django.views.genericからCreateViewをインポート
 from django.views.generic import CreateView
 # django.urlsからreverse_lazyをインポート
 from django.urls import reverse_lazy
 # formsモジュールからPhotoPostFormをインポート
-from .forms import PhotoPostForm
 # method_decoratorをインポート
 from django.utils.decorators import method_decorator
 # login_requiredをインポート
 from django.contrib.auth.decorators import login_required
 # modelsモジュールからモデルPhotoPostをインポート
-from .models import PhotoPost
+from .models import tokomodel
 # django.views.genericからDetailViewをインポート
 from django.views.generic import DetailView
 # django.views.genericからDeleteViewをインポート
 from django.views.generic import DeleteView
+from django.shortcuts import render, redirect
+from .forms import CategoryForm
 
+class ContactView(FormView):
+    """お問い合わせ"""
+
+    # テンプレート
+    template_name = "contact.html"
+    # フォーム
+    form_class = forms.ContactForm
+    # お問い合わせ送信成功後URL
+    success_url = reverse_lazy("photo:contact")
+
+    def form_valid(self, form):
+        """お問い合わせ送信処理"""
+
+        # パラメータ取得
+        name = form.cleaned_data["name"]
+        email = form.cleaned_data["email"]
+        title = form.cleaned_data["title"]
+        message_param = form.cleaned_data["message"]
+
+        # お問い合わせメールの送信処理（例として、自分自身にメールを送る設定）
+        subject = f"お問い合わせ: {title}"
+        message = f"名前: {name}\nメールアドレス: {email}\n\n{message_param}"
+        from_email = "XXXXXX@example.com"  # 送信元のメールアドレス
+        recipient_list = ["aio12345x@gmail.com"]  # 受信者のメールアドレスリスト
+
+        msg = EmailMessage(
+            subject=subject, body=message, from_email=from_email, to=recipient_list
+        )
+
+        try:
+            msg.send()
+            messages.success(self.request, "送信完了しました。")
+        except Exception as e:
+            messages.error(self.request, f"送信に失敗しました。エラー：{e}")
+
+        return super().form_valid(form)
+def category_list(request):
+    categories = Category.objects.all()
+    return render(request, 'category_list.html', {'categories': categories})
+
+def blog_by_category(request, categoryhyouji):
+    # カテゴリ名を元にカテゴリを取得
+    category = get_object_or_404(Category, name=categoryhyouji)
+
+    # カテゴリに関連するブログを取得
+    blogs = Blog.objects.filter(category=category)
+
+    # レンダリング
+    return render(request, 'blog_by_category.html', {'blogs': blogs})
+
+def blog_detail(request, slug):
+
+    blog = get_object_or_404(Blog, slug=slug)
+    return render(request, 'blog_detail.html', {'blog': blog})
+    
+def blog_list(request):
+    blogs = Blog.objects.all()
+    return render(request, 'blog_list.html', {'blogs': blogs})
+
+
+def add_category_success(request):
+    return render(request, 'add_category_success.html')
+
+def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('photo:add_category_success')  # リダイレクト先のURLを指定
+    else:
+        form = CategoryForm()
+
+    return render(request, 'your_template_name.html', {'form': form})
+
+def category_detail(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    posts = category.tokomodel_set.all()
+
+    context = {
+        'category': category,
+        'posts': posts,
+    }
+    return render(request, 'blog/category_detail.html', context)
 class IndexView(ListView):
     '''トップページのビュー
     '''
     # index.htmlをレンダリングする
     template_name ='index.html'
     # モデルBlogPostのオブジェクトにorder_by()を適用して
+    model = tokomodel
     # 投稿日時の降順で並べ替える
-    queryset = PhotoPost.objects.order_by('-posted_at')
-    # 1ページに表示するレコードの件数
     paginate_by = 9
+class Index2View(ListView):
+    template_name='index2.html'
+        # モデルBlogPostのオブジェクトにorder_by()を適用して
+    # 投稿日時の降順で並べ替える
+    model = tokomodel
+    paginate_by = 9
+class Category2View(ListView):
+    template_name='categori.html'
+    model = tokomodel
+    paginate_by = 9
+class AboutView(ListView):
+    template_name='about.html'
+    model = tokomodel
+    paginate_by = 9
+class Latest_newsView(ListView):
+    template_name='latest_news.html'
+    model = tokomodel
+    paginate_by = 9
+class ElementsView(ListView):
+    template_name='elements.html'
+    model = tokomodel
+    paginate_by = 9
+class BlogView(ListView):
+    template_name='blog.html'
+    model = tokomodel
+
+    paginate_by = 9
+class SingleblogView(ListView):
+    template_name='singleblog.html'
+    model = tokomodel
+
+    paginate_by = 9
+class DetailsView(ListView):
+    template_name='details.html'
+    model = tokomodel
+
+    paginate_by = 9
+
+
+    paginate_by = 9
+class Page2View(ListView):
+    template_name='Page2.html'
+    model = tokomodel
+
+    paginate_by = 9
+class TaikiView(ListView):
+    template_name='taiki1.html'
+    model = tokomodel
+
+    paginate_by = 9
+class Taiki2View(ListView):
+    template_name='taiki2.html'
+    model = tokomodel
+
+    paginate_by = 9
+    
+class Taiki3View(ListView):
+    template_name='taiki3.html'
+    model = tokomodel
+
+    paginate_by = 9
+    
+class Taiki4View(ListView):
+    template_name='taiki4.html'
+    model = tokomodel
+
+    paginate_by = 9
+    
+class Taiki5View(ListView):
+    template_name='taiki5.html'
+    model = tokomodel
+
+    paginate_by = 9
+    
+
+def blog(request):
+    categories = Category.objects.all()
+    posts = tokomodel.objects.all()
+
+    context = {
+        'categories': categories,
+        'posts': posts,
+    }
+    return render(request, 'blog/blog.html', context)
 
 # デコレーターにより、CreatePhotoViewへのアクセスはログインユーザーに限定される
 # ログイン状態でなければsettings.pyのLOGIN_URLにリダイレクトされる
-@method_decorator(login_required, name='dispatch')
-class CreatePhotoView(CreateView):
-    '''写真投稿ページのビュー
-    
-    PhotoPostFormで定義されているモデルとフィールドと連携して
-    投稿データをデータベースに登録する
-    
-    Attributes:
-      form_class: モデルとフィールドが登録されたフォームクラス
-      template_name: レンダリングするテンプレート
-      success_url: データベスへの登録完了後のリダイレクト先
-    '''
-    # forms.pyのPhotoPostFormをフォームクラスとして登録
-    form_class = PhotoPostForm
-    # レンダリングするテンプレート
-    template_name = "post_photo.html"
-    # フォームデータ登録完了後のリダイレクト先
-    success_url = reverse_lazy('photo:post_done')
 
-    def form_valid(self, form):
-        '''CreateViewクラスのform_valid()をオーバーライド
-        
-        フォームのバリデーションを通過したときに呼ばれる
-        フォームデータの登録をここで行う
-        
-        parameters:
-          form(django.forms.Form):
-            form_classに格納されているPhotoPostFormオブジェクト
-        Return:
-          HttpResponseRedirectオブジェクト:
-            スーパークラスのform_valid()の戻り値を返すことで、
-            success_urlで設定されているURLにリダイレクトさせる
-        '''
-        # commit=FalseにしてPOSTされたデータを取得
-        postdata = form.save(commit=False)
-        # 投稿ユーザーのidを取得してモデルのuserフィールドに格納
-        postdata.user = self.request.user
-        # 投稿データをデータベースに登録
-        postdata.save()
-        # 戻り値はスーパークラスのform_valid()の戻り値(HttpResponseRedirect)
-        return super().form_valid(form)
 
-class PostSuccessView(TemplateView):
-    '''投稿完了ページのビュー
-    
-    Attributes:
-      template_name: レンダリングするテンプレート
-    '''
-    # index.htmlをレンダリングする
-    template_name ='post_success.html'
 
-class CategoryView(ListView):
-    '''カテゴリページのビュー
-    
-    Attributes:
-      template_name: レンダリングするテンプレート
-      paginate_by: 1ページに表示するレコードの件数
-    '''
-    # index.htmlをレンダリングする
-    template_name ='index.html'
-    # 1ページに表示するレコードの件数
-    paginate_by = 9
 
-    def get_queryset(self):
-      '''クエリを実行する
-      
-      self.kwargsの取得が必要なため、クラス変数querysetではなく、
-      get_queryset（）のオーバーライドによりクエリを実行する
-      
-      Returns:
-        クエリによって取得されたレコード
-      '''     
-      # self.kwargsでキーワードの辞書を取得し、
-      # categoryキーの値(Categorysテーブルのid)を取得
-      category_id = self.kwargs['category']
-      # filter(フィールド名=id)で絞り込む
-      categories = PhotoPost.objects.filter(
-        category=category_id).order_by('-posted_at')
-      # クエリによって取得されたレコードを返す
-      return categories
 
-class UserView(ListView):
-    '''ユーザーの投稿一覧ページのビュー
-    
-    Attributes:
-      template_name: レンダリングするテンプレート
-      paginate_by: 1ページに表示するレコードの件数
-    '''
-    # index.htmlをレンダリングする
-    template_name ='index.html'
-    # 1ページに表示するレコードの件数
-    paginate_by = 9
 
-    def get_queryset(self):
-      '''クエリを実行する
-      
-      self.kwargsの取得が必要なため、クラス変数querysetではなく、
-      get_queryset（）のオーバーライドによりクエリを実行する
-      
-      Returns:
-        クエリによって取得されたレコード
-      '''
-      # self.kwargsでキーワードの辞書を取得し、
-      # userキーの値(ユーザーテーブルのid)を取得
-      user_id = self.kwargs['user']
-      # filter(フィールド名=id)で絞り込む
-      user_list = PhotoPost.objects.filter(
-        user=user_id).order_by('-posted_at')
-      # クエリによって取得されたレコードを返す
-      return user_list
 
-class DetailView(DetailView):
-    '''詳細ページのビュー
-    
-    投稿記事の詳細を表示するのでDetailViewを継承する
-     Attributes:
-      template_name: レンダリングするテンプレート
-      model: モデルのクラス
-    '''
-    # post.htmlをレンダリングする
-    template_name ='detail.html'
-    # クラス変数modelにモデルBlogPostを設定
-    model = PhotoPost
-
-class MypageView(ListView):
-    '''マイページのビュー
-    
-    Attributes:
-      template_name: レンダリングするテンプレート
-      paginate_by: 1ページに表示するレコードの件数
-    '''
-    # mypage.htmlをレンダリングする
-    template_name ='mypage.html'
-    # 1ページに表示するレコードの件数
-    paginate_by = 9
-
-    def get_queryset(self):
-      '''クエリを実行する
-      
-      self.kwargsの取得が必要なため、クラス変数querysetではなく、
-      get_queryset（）のオーバーライドによりクエリを実行する
-      
-      Returns:
-        クエリによって取得されたレコード
-      '''
-      # 現在ログインしているユーザー名はHttpRequest.userに格納されている
-      # filter(userフィールド=userオブジェクト)で絞り込む
-      queryset = PhotoPost.objects.filter(
-        user=self.request.user).order_by('-posted_at')
-      # クエリによって取得されたレコードを返す
-      return queryset
-  
-class PhotoDeleteView(DeleteView):
-    '''レコードの削除を行うビュー
-    
-    Attributes:
-      model: モデル
-      template_name: レンダリングするテンプレート
-      paginate_by: 1ページに表示するレコードの件数
-      success_url: 削除完了後のリダイレクト先のURL
-    '''
-    # 操作の対象はPhotoPostモデル
-    model = PhotoPost
-    # photo_delete.htmlをレンダリングする
-    template_name ='photo_delete.html'
-    # 処理完了後にマイページにリダイレクト
-    success_url = reverse_lazy('photo:mypage')
-
-    def delete(self, request, *args, **kwargs):
-      '''レコードの削除を行う
-      
-      Parameters:
-        self: PhotoDeleteViewオブジェクト
-        request: WSGIRequest(HttpRequest)オブジェクト
-        args: 引数として渡される辞書(dict)
-        kwargs: キーワード付きの辞書(dict)
-                {'pk': 21}のようにレコードのidが渡される
-      
-      Returns:
-        HttpResponseRedirect(success_url)を返して
-        success_urlにリダイレクト
-      '''
-      # スーパークラスのdelete()を実行
-      return super().delete(request, *args, **kwargs)

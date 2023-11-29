@@ -1,0 +1,12 @@
+<ul id="navigation">    
+    <li><a href="index2">Home</a></li>
+    <li><a href="categori">Category</a>
+        <ul class="submenu">
+            {% for category in categories %}
+            <li><a href="{% url 'photo:category_detail' category.id %}">{{ category.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+    <li><a href="about">About</a></li>
+    <li><a href="contact">Contact</a></li>
+</ul>

@@ -1,0 +1,7 @@
+<form method="post" action="{% url 'photo:add_category' %}">
+
+    {% csrf_token %}
+    {{ form.name.label_tag }} {{ form.name }}
+    {{ form.description.label_tag }} {{ form.description }}
+    <button type="submit">Add Category</button>
+</form>

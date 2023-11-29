@@ -1,0 +1,8 @@
+<!-- your_template_name.html -->
+
+{% for blog in blogs %}
+    <h2><a href="{% url 'photo:blog_detail' slug=blog.slug %}">{{ blog.title }}</a></h2>
+    <p>Category: {{ blog.category.name }}</p>
+    <!-- 他のブログの詳細情報も表示する場合はここに追加 -->
+    <hr>
+{% endfor %}

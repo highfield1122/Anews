@@ -1,0 +1,8 @@
+<!-- category_detail.html -->
+
+<h2>{{ category.name }} Category</h2>
+
+{% for post in posts %}
+    <h3>{{ post.title }}</h3>
+    <p>{{ post.content }}</p>
+{% endfor %}

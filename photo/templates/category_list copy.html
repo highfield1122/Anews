@@ -1,0 +1,12 @@
+<!-- category_list.html -->
+
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h1>カテゴリー一覧</h1>
+  <ul>
+    {% for category in categories %}
+      <li><a href="{% url 'photo:blog_by_category' categoryhyouji=category.name %}">{{ category.name }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -11,12 +11,14 @@ from django.conf.urls.static import static
 # URLパターンを登録するための変数
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
+    path('photo/', include('photo.urls')),
+
     # photo.urlsへのURLパターン
     path('', include('photo.urls')),
     
     # accounts.urlsへのURLパターン
     path('', include('accounts.urls')),
+    
     
     # パスワードリセットのためのURLパターン
     # PasswordResetConfirmViewがプロジェクトのurls.pyを参照するのでここに記載

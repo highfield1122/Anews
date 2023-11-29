@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
@@ -139,11 +140,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Gmailのアドレス、Gmailのアプリ用パスワードは
 # お使いのものを入力してください
 DEFAULT_FROM_EMAIL = 'toshiyakinjo@gmail.com'  # メールの送信元のアドレスを入力
-EMAIL_HOST = 'smtp.gmail.com'            # GmailのSMPTサーバー　　　
-EMAIL_PORT = 587                         # SMPTサーバーのポート番号
-EMAIL_HOST_USER = 'toshiyakinjo@gmail.com'     # Gmailのアドレスを入力
-EMAIL_HOST_PASSWORD = 'bbwwhatohmcgbguy' # Gmailのアプリ用パスワードを入力
-EMAIL_USE_TLS = True # SMTP サーバと通信する際に TLS (セキュア) 接続を使う
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com" # GmailのSMTPサーバー
+EMAIL_PORT = 587 # Gmailサーバーのポート
+EMAIL_HOST_USER = "aio12345x@gmail.com" # 自身のGmailアドレス（メール送信用SMTPサーバーの認証）
+EMAIL_HOST_PASSWORD = "dxzh oodh hvpp bjee " # アプリパスワード
+EMAIL_USE_TLS = True # SMTPサーバーと通信する際に、TLS（セキュア）接続する
 
 # mediaフォルダーの場所(BASE_DIR以下のmedia)を登録
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
